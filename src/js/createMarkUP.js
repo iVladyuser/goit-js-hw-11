@@ -1,29 +1,40 @@
 import ref from './refs';
-// console.log(ref.catInfo);
 
-// const { catInfo } = ref;
+const { gallery } = ref;
 
-// export function createMarkUpSelect(catSelect) {
-// // Неявне повернення
-//     // return catSelect.map(element => ({ name: element.name, value: element.id }));
-
-//     //Явне повернення
-//     return catSelect.map(element => {
-//          return { text: element.name, value: element.id };
-//      })
-
-// }
-
-
-// export function createMarkUpCatById(dataCat) {
-//   const { url, breeds } = dataCat;
-//   const divCatInfo = `<div class="tumb-img">
-//   <img class="photo" src="${url}" alt="${breeds[0].name}">
-// <div class="description-img">
-//   <h2>${breeds[0].name}</h2>
-//   <p>${breeds[0].description}</p>
-//   <h3>Temperament: <span>${breeds[0].temperament}</span></h3>
-// </div>
-// </div>`;
-//   catInfo.innerHTML = divCatInfo;
-// }
+export function createMarkUP(arr) {
+  const arrPhotos = arr.map(
+    ({
+      webformatURL,
+      largeImageURL,
+      tags,
+      likes,
+      views,
+      comments,
+      downloads,
+    }) => {
+      return `<div class="photo-card">
+    <div class="img_wrap">
+            <a class="gallery_link" href="${largeImageURL}">
+    <img src="${webformatURL}" alt="${tags}" width="300" loading="lazy" />
+    </a>
+</div>
+<div class="info">
+<p class="info-item">
+<b>Likes: ${likes}</b>
+</p>
+<p class="info-item">
+<b>Views: ${views}</b>
+</p>
+<p class="info-item">
+<b>Comments: ${comments}</b>
+</p>
+<p class="info-item">
+<b>Downloads: ${downloads}</b>
+</p>
+</div>
+  </div>`;
+    }
+  );
+  gallery.insertAdjacentHTML('beforeend', arrPhotos.join(''));
+}

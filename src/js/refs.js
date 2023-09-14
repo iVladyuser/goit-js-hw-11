@@ -1,5 +1,6 @@
 export default {
-  // selector: document.querySelector('.breed-select'),
-  // catInfo: document.querySelector('.cat-info'),
-  // loader: document.querySelector('.loader'),
+  form: document.querySelector('.search-form'),
+  gallery: document.querySelector('.gallery'),
+  btnSubmit: document.querySelector('.submit'),
+  btnLoadMore: document.querySelector('.load-more'),
 };
