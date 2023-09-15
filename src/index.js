@@ -1,5 +1,5 @@
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
-import './style.css'
+import './style.css';
 import SimpleLightbox from 'simplelightbox';
 
 import 'simplelightbox/dist/simple-lightbox.min.css';
@@ -11,9 +11,9 @@ import { onFetchError } from './js/showError';
 const { form, gallery, btnLoadMore } = refs;
 
 const paramsForNotify = {
-  position: 'center-center',
+  position: 'right-top',
   timeout: 1500,
-  width: '400px',
+  width: '750px',
   fontSize: '22px',
 };
 
@@ -34,12 +34,13 @@ function onSubmitForm(event) {
   fetchAnimals(keyOfPhoto, page, perPage)
     .then(data => {
       const arr = data.hits;
-
-      if (data.totalHits === 0) {
-        Notify.failure(
+      if (keyOfPhoto === '' || data.totalHits === 0) {
+        btnLoadMore.hidden = true;
+        Notify.info(
           'Sorry, there are no images matching your search query. Please try again.',
           paramsForNotify
         );
+        return;
       } else {
         Notify.info(
           `Hooray! We found ${data.totalHits} images.`,
@@ -47,22 +48,14 @@ function onSubmitForm(event) {
         );
         createMarkUP(arr);
       }
-	  if (data.totalHits > perPage) {
-		btnLoadMore.hidden = false;
-		window.addEventListener('scroll', showLoadMorePage);
-	};
+      if (data.totalHits > perPage) {
+        btnLoadMore.hidden = false;
+        // window.addEventListener('scroll', showLoadMorePage);
+      }
     })
 
     .catch(onFetchError)
     .finally(() => form.reset());
-
-  if (keyOfPhoto === '') {
-    Notify.info(
-      'Sorry, there are no images matching your search query. Please try again.',
-      paramsForNotify
-    );
-    return;
-  }
 }
 
 btnLoadMore.addEventListener('click', onload);

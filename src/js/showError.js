@@ -1,17 +1,14 @@
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
 import ref from './refs';
-// const { loader } = ref;
+const { btnLoadMore } = ref;
 
 export function onFetchError(error) {
-//   catInfo.hidden = true;
-//   selector.hidden = true;
-//   loader.classList.replace('loader', 'is-hidden');
-
+  btnLoadMore.hidden = false;
   Notify.failure(
     'Oops! Something went wrong! Select please another cat breed!',
     {
-      position: 'center-center',
-      timeout: 5000,
+      position: 'right-top',
+      timeout: 1500,
       width: '400px',
       fontSize: '24px',
     }

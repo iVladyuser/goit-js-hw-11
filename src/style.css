@@ -8,78 +8,50 @@ body {
   line-height: 1.5;
 }
 
-.loader {
-  position: relative;
-width: 164px;
-height: 164px;
-border-radius: 50%;
-animation: rotate 0.75s linear infinite;
-}
-.loader::before {
-content: '';
-position: absolute;
-width: 20px;
-height: 40px;
-border: 1px solid #FF3D00;
-border-width: 12px 2px 7px;
-border-radius: 2px 2px 1px 1px;
-box-sizing: border-box;
-transform: rotate(45deg) translate(24px, -10px);
-background-image: linear-gradient(#FF3D00 20px, transparent 0),
-linear-gradient(#FF3D00 30px, transparent 0),
-linear-gradient(#FF3D00 30px, transparent 0);
-background-size: 10px 12px , 1px 30px, 1px 30px;
-background-repeat: no-repeat;
-background-position: center , 12px 0px , 3px 0px;
-}
-.loader::after {
-content: '';
-position: absolute;
-height: 4px;
-width: 4px;
-left: 20px;
-top: 47px;
-border-radius: 50%;
-color: #Fff;
-box-shadow: -4px 7px 2px, -7px 16px 3px 1px,
--11px 24px 4px 1px, -6px 24px 4px 1px,
--14px 35px 6px 2px, -5px 36px 8px 2px,
--5px 45px 8px 2px, -14px 49px 8px 2px,
-6px 60px 11px 1px, -11px 66px 11px 1px,
-11px 75px 13px, -1px 82px 15px;
-}
+.search-form {
 
-@keyframes rotate {
-to{transform:rotate(360deg)   }
-}
-
-.tumb-img {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
   display: flex;
-  gap: 30px;
+  /* gap: 30px; */
   align-items: center;
-}
-
-img {
-  max-width: 600px;
-  max-height: 90vh;
-}
-
-span {
-  font-weight: 400;
-}
+  justify-content:flex-start;
+  padding: 15px 0 15px 0;
+  background: rgba(6, 71, 80, 0.959);
   
-  
+}
 
+input {
+  margin-left: 30px;
+  width: 300px;
+  height: 40px;
+  padding: 5px 5px 5px 15px;
+  font-size: 16px;
+  outline: none;
+  border: none;
 
-.is-hidden {
-	opacity: 0;
-	visibility: hidden;
-	pointer-events: none;
-  overflow: hidden;
+}
+
+.btn-submit {
+  width: 100px;
+  height: 50px;
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+
+  cursor: pointer;
+  background-color: #e3e3d9;
+}
+
+button:hover,
+button:focus {
+  background-color: #f1ab60;
 }
 
 .gallery {
-  margin-top: 90px;
+  margin-top: 95px;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
