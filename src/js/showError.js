@@ -1,9 +1,9 @@
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
-import ref from './refs';
-const { btnLoadMore } = ref;
+// import ref from './refs';
+// const { btnLoadMore } = ref;
 
-export function onFetchError(error) {
-  btnLoadMore.hidden = false;
+export function onFetchError() {
+//   btnLoadMore.hidden = false;
   Notify.failure(
     'Oops! Something went wrong! Select please another cat breed!',
     {

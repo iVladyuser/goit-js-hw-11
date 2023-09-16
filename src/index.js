@@ -1,23 +1,52 @@
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
-import './style.css';
 import SimpleLightbox from 'simplelightbox';
-
 import 'simplelightbox/dist/simple-lightbox.min.css';
+
+import './style.css';
 import refs from './js/refs';
+
 import { fetchAnimals } from './js/pixabay-api';
 import { createMarkUP } from './js/createMarkUP';
 import { onFetchError } from './js/showError';
 
-const { form, gallery, btnLoadMore } = refs;
+const { form, gallery, divGuard } = refs;
 
 const paramsForNotify = {
   position: 'right-top',
   timeout: 1500,
-  width: '750px',
+  width: '480px',
   fontSize: '22px',
 };
 
-const perPage = 20;
+let currentPage = 1;
+let options = {
+  root: null,
+  rootMargin: '200px',
+  threshold: 1.0,
+};
+
+let observer = new IntersectionObserver(onLoad, options);
+
+function onLoad(entries, observer) {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      currentPage += 1;
+      fetchAnimals(currentPage)
+        .then(data => {
+          const arr = data.hits;
+          createMarkUP(arr);
+          const lightbox = new SimpleLightbox('.img_wrap a');
+          if (data.totalHits <= perPage) {
+            observer.unobserve(divGuard);
+          }
+        })
+
+        .catch(onFetchError);
+    }
+  });
+}
+
+let perPage = 24;
 let page = 1;
 let keyOfPhoto = '';
 
@@ -34,23 +63,19 @@ function onSubmitForm(event) {
   fetchAnimals(keyOfPhoto, page, perPage)
     .then(data => {
       const arr = data.hits;
-      if (keyOfPhoto === '' || data.totalHits === 0) {
-        btnLoadMore.hidden = true;
+      observer.observe(divGuard);
+      if (keyOfPhoto === '') {
         Notify.info(
-          'Sorry, there are no images matching your search query. Please try again.',
+          'Sorry, there are no images. Please try again.',
           paramsForNotify
         );
-        return;
       } else {
+        createMarkUP(arr);
+        const lightbox = new SimpleLightbox('.img_wrap a');
         Notify.info(
           `Hooray! We found ${data.totalHits} images.`,
           paramsForNotify
         );
-        createMarkUP(arr);
-      }
-      if (data.totalHits > perPage) {
-        btnLoadMore.hidden = false;
-        // window.addEventListener('scroll', showLoadMorePage);
       }
     })
 
@@ -58,14 +83,14 @@ function onSubmitForm(event) {
     .finally(() => form.reset());
 }
 
-btnLoadMore.addEventListener('click', onload);
+// btnLoadMore.addEventListener('click', onload);
 
-function onload() {
-  page += 1;
-  fetchAnimals(keyOfPhoto, page, perPage)
-    .then(data => {
-      const arr = data.hits;
-      createMarkUP(arr);
-    })
-    .catch(onFetchError);
-}
+// function onload() {
+//   page += 1;
+//   fetchAnimals(keyOfPhoto, page, perPage)
+//     .then(data => {
+//       const arr = data.hits;
+//       createMarkUP(arr);
+//     })
+//     .catch(onFetchError);
+// }

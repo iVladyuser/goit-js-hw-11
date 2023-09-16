@@ -15,7 +15,6 @@ body {
   left: 0;
   width: 100%;
   display: flex;
-  /* gap: 30px; */
   align-items: center;
   justify-content:flex-start;
   padding: 15px 0 15px 0;
@@ -25,8 +24,8 @@ body {
 
 input {
   margin-left: 30px;
-  width: 300px;
-  height: 40px;
+  width: 250px;
+  height: 30px;
   padding: 5px 5px 5px 15px;
   font-size: 16px;
   outline: none;
@@ -36,7 +35,7 @@ input {
 
 .btn-submit {
   width: 100px;
-  height: 50px;
+  height: 40px;
   font-size: 16px;
   font-weight: 600;
   border: none;
@@ -56,4 +55,7 @@ button:focus {
   flex-wrap: wrap;
   justify-content: center;
   gap: 40px
+}
+.container {
+  height: 400px;
 }
