@@ -9,7 +9,7 @@ import { fetchAnimals } from './js/pixabay-api';
 import { createMarkUP } from './js/createMarkUP';
 import { onFetchError } from './js/showError';
 
-const { form, gallery, divGuard } = refs;
+const { form, gallery, divGuard, input } = refs;
 
 const paramsForNotify = {
   position: 'right-top',
@@ -18,7 +18,6 @@ const paramsForNotify = {
   fontSize: '22px',
 };
 
-let currentPage = 1;
 let options = {
   root: null,
   rootMargin: '200px',
@@ -30,12 +29,13 @@ let observer = new IntersectionObserver(onLoad, options);
 function onLoad(entries, observer) {
   entries.forEach(entry => {
     if (entry.isIntersecting) {
-      currentPage += 1;
-      fetchAnimals(currentPage)
+      page += 1;
+      fetchAnimals(keyOfPhoto, page, perPage)
         .then(data => {
           const arr = data.hits;
           createMarkUP(arr);
           const lightbox = new SimpleLightbox('.img_wrap a');
+          lightbox.refresh();
           if (data.totalHits <= perPage) {
             observer.unobserve(divGuard);
           }
@@ -46,7 +46,7 @@ function onLoad(entries, observer) {
   });
 }
 
-let perPage = 24;
+let perPage = 40;
 let page = 1;
 let keyOfPhoto = '';
 
@@ -54,24 +54,32 @@ form.addEventListener('submit', onSubmitForm);
 
 function onSubmitForm(event) {
   event.preventDefault();
-
+  if (input.value === '') {
+    Notify.info('Enter your request, please!', paramsForNotify);
+    return;
+  }
   gallery.innerHTML = '';
   page = 1;
   const { searchQuery } = event.currentTarget.elements;
   keyOfPhoto = searchQuery.value.trim().toLowerCase().split(' ').join('+');
 
+  if (keyOfPhoto === '') {
+    Notify.info('Enter your request, please!', paramsForNotify);
+    return;
+  }
   fetchAnimals(keyOfPhoto, page, perPage)
     .then(data => {
       const arr = data.hits;
       observer.observe(divGuard);
-      if (keyOfPhoto === '') {
-        Notify.info(
-          'Sorry, there are no images. Please try again.',
+      if (data.totalHits === 0) {
+        Notify.failure(
+          'Sorry, there are no images matching your search query. Please try again.',
           paramsForNotify
         );
       } else {
         createMarkUP(arr);
         const lightbox = new SimpleLightbox('.img_wrap a');
+        lightbox.refresh();
         Notify.info(
           `Hooray! We found ${data.totalHits} images.`,
           paramsForNotify
@@ -80,17 +88,7 @@ function onSubmitForm(event) {
     })
 
     .catch(onFetchError)
-    .finally(() => form.reset());
+    .finally(() => {
+      form.reset();
+    });
 }
-
-// btnLoadMore.addEventListener('click', onload);
-
-// function onload() {
-//   page += 1;
-//   fetchAnimals(keyOfPhoto, page, perPage)
-//     .then(data => {
-//       const arr = data.hits;
-//       createMarkUP(arr);
-//     })
-//     .catch(onFetchError);
-// }
