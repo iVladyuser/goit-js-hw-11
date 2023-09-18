@@ -1,5 +1,5 @@
 import axios from 'axios';
-
+// import { onFetchError } from './js/showError';
 const URL = 'https://pixabay.com/api/';
 const KEY = '39440146-e742bf3c7a957201e6286a658';
 
@@ -17,16 +17,15 @@ export async function fetchAnimals(q, page, perPage) {
 //   try {
 //     const response = await axios.get({
 //       params: {
+//         key: '39440146-e742bf3c7a957201e6286a658',
 //         q: q,
 //         page: page,
-//         perPage: perPage,
+//         perPage: per_page,
 //         image_type: 'photo',
 //         orientation: 'horizontal',
 //         safesearch: 'true',
 //       },
 //     });
 //     return response.data;
-//   } catch (error) {
-//     console.log(error);
-//   }
-// };
+//   } catch(onFetchError);
+// }
