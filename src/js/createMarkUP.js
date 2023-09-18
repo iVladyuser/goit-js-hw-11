@@ -3,7 +3,7 @@ import ref from './refs';
 
 const { gallery } = ref;
 
-export function createMarkUP(arr) {
+export function createMarkUp(arr) {
   const arrPhotos = arr.map(
     ({
       webformatURL,
