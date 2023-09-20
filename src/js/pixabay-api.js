@@ -23,10 +23,9 @@ export default class NewsApiService {
           safesearch: 'true',
         },
       });
-      this.page += 1;
       return response.data;
     } catch {
-      onFetchError;
+      onFetchError();
     }
   }
 
@@ -41,7 +40,10 @@ export default class NewsApiService {
   resetPage() {
     this.page = 1;
   }
+
+  
 }
+
 
 // export async function fetchPhoto(q, page, perPage) {
 //   try {

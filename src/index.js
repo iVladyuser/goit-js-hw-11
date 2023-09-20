@@ -8,8 +8,9 @@ import refs from './js/refs';
 import NewsApiService from './js/pixabay-api';
 import { createMarkUp } from './js/createMarkUP';
 import { onFetchError } from './js/showError';
+import {createFetchPhoto} from './js/createFetchPhoto'
 
-const { form, gallery, divGuard, input } = refs;
+const { form, gallery, input } = refs;
 
 const paramsForNotify = {
   position: 'right-top',
@@ -18,9 +19,8 @@ const paramsForNotify = {
   fontSize: '22px',
 };
 
-let perPage = 40;
-let page = 0;
-// let keyOfPhoto = '';
+let page = 1;
+
 const lightbox = new SimpleLightbox('.img_wrap a');
 const newsApiService = new NewsApiService();
 
@@ -37,18 +37,13 @@ function onSubmitForm(event) {
 
   const value = event.currentTarget.elements.searchQuery.value;
   newsApiService.q = value;
-  //   newsApiService.newPage = event.currentTarget.elements.page.value;
+
   newsApiService.resetPage();
 
-  //   if (keyOfPhoto === '') {
-  //     Notify.info('Enter your request, please!', paramsForNotify);
-  //     return;
-  //   }
   newsApiService
     .fetchPhoto()
-    .then(data => {
-      const arr = data.hits;
-      if (data.totalHits === 0) {
+    .then(({ hits, totalHits }) => {
+      if (!totalHits) {
         Notify.failure(
           'Sorry, there are no images matching your search query. Please try again.',
           paramsForNotify
@@ -56,19 +51,16 @@ function onSubmitForm(event) {
 
         return;
       }
-      createMarkUp(arr);
-      observer.observe(divGuard);
+      createMarkUp(hits);
+      const lastCard = document.querySelector('.gallery').lastChild;
+      if (lastCard) observer.observe(lastCard);
+
       lightbox.refresh();
-      Notify.info(
-        `Hooray! We found ${data.totalHits} images.`,
-        paramsForNotify
-      );
+      Notify.info(`Hooray! We found ${totalHits} images.`, paramsForNotify);
     })
 
     .catch(onFetchError);
-  // .finally(() => {
-  //   form.reset();
-  // });
+
   event.currentTarget.reset();
 }
 
@@ -82,16 +74,18 @@ let observer = new IntersectionObserver(onLoad, options);
 
 function onLoad([entry], observer) {
   if (entry.isIntersecting) {
-    newsApiService
-      .fetchPhoto()
-      .then(data => {
-        const arr = data.hits;
-        createMarkUp(arr);
-        lightbox.refresh();
-        if (data.totalHits <= perPage) {
-          observer.unobserve(divGuard);
-        }
-      })
-      .catch(onFetchError);
+    observer.unobserve(entry.target);
+    page += 1;
+    newsApiService.newPage = page;
+	createFetchPhoto();
+	console.log(createFetchPhoto);
+    // newsApiService
+    //   .fetchPhoto()
+    //   .then(({ hits }) => {
+    //     createFetchPhoto()
+    //     const lastCard = document.querySelector('.gallery').lastChild;
+    //     if (lastCard) observer.observe(lastCard);
+    //   })
+    //   .catch(onFetchError);
   }
 }
