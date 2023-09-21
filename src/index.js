@@ -87,10 +87,10 @@ function onLoad([entry], observer) {
         const lastCard = document.querySelector('.gallery').lastChild;
         if (lastCard) observer.observe(lastCard);
       })
-      .catch(onFetchError);
+	  .catch(onFetchError);
   }
 }
 
 // if (hits < perPage) {
-	
+	// observer.unobserve(lastCard)
 // }
