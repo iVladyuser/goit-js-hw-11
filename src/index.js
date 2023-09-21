@@ -8,7 +8,7 @@ import refs from './js/refs';
 import NewsApiService from './js/pixabay-api';
 import { createMarkUp } from './js/createMarkUP';
 import { onFetchError } from './js/showError';
-import {createFetchPhoto} from './js/createFetchPhoto'
+// import { createFetchPhoto } from './js/createFetchPhoto';
 
 const { form, gallery, input } = refs;
 
@@ -77,15 +77,14 @@ function onLoad([entry], observer) {
     observer.unobserve(entry.target);
     page += 1;
     newsApiService.newPage = page;
-	createFetchPhoto();
-	console.log(createFetchPhoto);
-    // newsApiService
-    //   .fetchPhoto()
-    //   .then(({ hits }) => {
-    //     createFetchPhoto()
-    //     const lastCard = document.querySelector('.gallery').lastChild;
-    //     if (lastCard) observer.observe(lastCard);
-    //   })
-    //   .catch(onFetchError);
+	newsApiService
+    .fetchPhoto()
+      .then(({ hits }) => {
+        createMarkUp(hits);
+        lightbox.refresh();
+        const lastCard = document.querySelector('.gallery').lastChild;
+        if (lastCard) observer.observe(lastCard);
+      })
+      .catch(onFetchError);
   }
 }
