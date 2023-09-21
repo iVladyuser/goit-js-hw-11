@@ -20,7 +20,6 @@ const paramsForNotify = {
 };
 
 let page = 1;
-const perPage = 40;
 
 const lightbox = new SimpleLightbox('.img_wrap a');
 const newsApiService = new NewsApiService();
@@ -35,29 +34,32 @@ function onSubmitForm(event) {
     return;
   }
   gallery.innerHTML = '';
-
+  page = 1;
   const value = event.currentTarget.elements.searchQuery.value;
   newsApiService.q = value;
 
-  newsApiService.resetPage();
+  newsApiService.resetPage((page = 1));
 
   newsApiService
     .fetchPhoto()
-    .then(({ hits, totalHits }) => {
+    .then(({ hits, totalHits, total }) => {
       if (!totalHits) {
         Notify.failure(
           'Sorry, there are no images matching your search query. Please try again.',
           paramsForNotify
         );
-
         return;
       }
       createMarkUp(hits);
+      lightbox.refresh();
+      Notify.info(`Hooray! We found ${total} images.`, paramsForNotify);
+
       const lastCard = document.querySelector('.gallery').lastChild;
       if (lastCard) observer.observe(lastCard);
 
-      lightbox.refresh();
-      Notify.info(`Hooray! We found ${totalHits} images.`, paramsForNotify);
+      if (page * 40 >= total) {
+        observer.unobserve(lastCard);
+      }
     })
 
     .catch(onFetchError);
@@ -80,17 +82,15 @@ function onLoad([entry], observer) {
     newsApiService.newPage = page;
     newsApiService
       .fetchPhoto()
-      .then(({ hits }) => {
-	
+      .then(({ hits, total }) => {
         createMarkUp(hits);
         lightbox.refresh();
+        if (page * 40 >= total) {
+          observer.unobserve(lastCard);
+        }
         const lastCard = document.querySelector('.gallery').lastChild;
         if (lastCard) observer.observe(lastCard);
       })
-	  .catch(onFetchError);
+      .catch();
   }
 }
-
-// if (hits < perPage) {
-	// observer.unobserve(lastCard)
-// }
