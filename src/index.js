@@ -20,6 +20,7 @@ const paramsForNotify = {
 };
 
 let page = 1;
+const perPage = 40;
 
 const lightbox = new SimpleLightbox('.img_wrap a');
 const newsApiService = new NewsApiService();
@@ -77,9 +78,10 @@ function onLoad([entry], observer) {
     observer.unobserve(entry.target);
     page += 1;
     newsApiService.newPage = page;
-	newsApiService
-    .fetchPhoto()
+    newsApiService
+      .fetchPhoto()
       .then(({ hits }) => {
+	
         createMarkUp(hits);
         lightbox.refresh();
         const lastCard = document.querySelector('.gallery').lastChild;
@@ -88,3 +90,7 @@ function onLoad([entry], observer) {
       .catch(onFetchError);
   }
 }
+
+// if (hits < perPage) {
+	
+// }
